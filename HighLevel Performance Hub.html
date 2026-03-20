@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HighLevel Performance & Rewards Hub</title>
+<style>
+:root {
+  --hl-green: #00C853;
+  --hl-dark: #1a1a2e;
+  --hl-navy: #16213e;
+  --hl-mid: #0f3460;
+  --hl-accent: #00C853;
+  --hl-accent2: #00E676;
+  --hl-light: #e8f5e9;
+  --hl-white: #ffffff;
+  --hl-gray: #f5f5f7;
+  --hl-text: #2d2d2d;
+  --hl-muted: #6b7280;
+  --hl-border: #e0e0e0;
+  --hl-orange: #FF9800;
+  --hl-red: #EF5350;
+  --hl-blue: #42A5F5;
+  --hl-purple: #AB47BC;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--hl-gray); color: var(--hl-text); line-height:1.6; }
+
+/* TOP NAV */
+.topnav { background: var(--hl-dark); color:#fff; padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; position:fixed; top:0; left:0; right:0; z-index:1000; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.topnav .logo { display:flex; align-items:center; gap:10px; font-size:1.2rem; font-weight:700; }
+.topnav .logo span.hl { color: var(--hl-green); }
+.topnav .logo .badge { font-size:0.65rem; background: var(--hl-green); color: var(--hl-dark); padding:2px 8px; border-radius:20px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+
+/* MODULE TABS */
+.module-tabs { display:flex; gap:4px; }
+.module-tab { background:transparent; border:none; color:rgba(255,255,255,0.6); padding:8px 20px; font-size:0.85rem; font-weight:600; cursor:pointer; border-radius:8px 8px 0 0; transition:all 0.2s; }
+.module-tab:hover { color:#fff; background:rgba(255,255,255,0.1); }
+.module-tab.active { color:#fff; background: var(--hl-mid); }
+
+/* SIDEBAR */
+.layout { display:flex; margin-top:64px; min-height:calc(100vh - 64px); }
+.sidebar { width:260px; background: var(--hl-navy); color:#fff; padding:1.5rem 0; position:fixed; top:64px; bottom:0; overflow-y:auto; z-index:100; transition: transform 0.3s; }
+.sidebar .section-label { font-size:0.65rem; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.4); padding:1rem 1.5rem 0.4rem; font-weight:600; }
+.sidebar a { display:flex; align-items:center; gap:10px; padding:10px 1.5rem; color:rgba(255,255,255,0.75); text-decoration:none; font-size:0.88rem; transition:all 0.15s; border-left:3px solid transparent; }
+.sidebar a:hover { background:rgba(255,255,255,0.06); color:#fff; }
+.sidebar a.active { background:rgba(0,200,83,0.12); color: var(--hl-green); border-left-color: var(--hl-green); font-weight:600; }
+.sidebar .icon { font-size:1.1rem; width:24px; text-align:center; }
+
+/* MAIN CONTENT */
+.main { margin-left:260px; flex:1; padding:2rem 2.5rem; max-width:1100px; }
+.main h1 { font-size:1.8rem; font-weight:700; margin-bottom:0.3rem; color: var(--hl-dark); }
+.main .subtitle { color: var(--hl-muted); font-size:0.95rem; margin-bottom:2rem; }
+
+/* PERSONA SWITCHER */
+.persona-bar { display:flex; gap:8px; margin-bottom:2rem; flex-wrap:wrap; }
+.persona-btn { padding:10px 22px; border-radius:30px; border:2px solid var(--hl-border); background:#fff; font-size:0.88rem; font-weight:600; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; gap:8px; }
+.persona-btn:hover { border-color: var(--hl-green); background: var(--hl-light); }
+.persona-btn.active { background: var(--hl-green); color:#fff; border-color: var(--hl-green); }
+.persona-btn .p-icon { font-size:1.1rem; }
+
+/* CARDS */
+.card { background:#fff; border-radius: var(--radius); padding:1.8rem; margin-bottom:1.5rem; box-shadow: var(--shadow-sm); border:1px solid var(--hl-border); }
+.card h2 { font-size:1.2rem; font-weight:700; margin-bottom:0.8rem; display:flex; align-items:center; gap:8px; }
+.card h3 { font-size:1rem; font-weight:600; margin:1rem 0 0.5rem; color: var(--hl-mid); }
+.card p { margin-bottom:0.6rem; font-size:0.92rem; }
+.card ul { margin:0.5rem 0 0.8rem 1.2rem; font-size:0.92rem; }
+.card li { margin-bottom:0.3rem; }
+
+/* PROCESS FLOW */
+.flow { display:flex; gap:0; margin:1.5rem 0; overflow-x:auto; padding-bottom:8px; }
+.flow-step { flex:1; min-width:140px; text-align:center; position:relative; }
+.flow-step .circle { width:48px; height:48px; border-radius:50%; background: var(--hl-green); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; margin:0 auto 8px; position:relative; z-index:2; }
+.flow-step .label { font-size:0.78rem; font-weight:600; color: var(--hl-dark); }
+.flow-step .sub { font-size:0.7rem; color: var(--hl-muted); margin-top:2px; }
+.flow-step:not(:last-child)::after { content:''; position:absolute; top:24px; left:calc(50% + 24px); right:calc(-50% + 24px); height:3px; background: var(--hl-green); z-index:1; }
+
+/* RATING SCALE */
+.rating-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin:1rem 0; }
+.rating-card { padding:1rem; border-radius: var(--radius-sm); text-align:center; font-size:0.82rem; }
+.rating-card .pct { font-size:1.4rem; font-weight:800; margin-bottom:4px; }
+.rating-card .rtitle { font-weight:700; font-size:0.8rem; margin-bottom:6px; }
+.rc-green { background: #e8f5e9; border:2px solid #4CAF50; }
+.rc-green .pct, .rc-green .rtitle { color: #2E7D32; }
+.rc-blue { background: #e3f2fd; border:2px solid #42A5F5; }
+.rc-blue .pct, .rc-blue .rtitle { color: #1565C0; }
+.rc-orange { background: #fff3e0; border:2px solid #FF9800; }
+.rc-orange .pct, .rc-orange .rtitle { color: #E65100; }
+.rc-red { background: #ffebee; border:2px solid #EF5350; }
+.rc-red .pct, .rc-red .rtitle { color: #C62828; }
+
+/* TIMELINE */
+.timeline { position:relative; margin:1.5rem 0; padding-left:30px; }
+.timeline::before { content:''; position:absolute; left:12px; top:0; bottom:0; width:3px; background: linear-gradient(to bottom, var(--hl-green), var(--hl-blue)); border-radius:2px; }
+.tl-item { position:relative; margin-bottom:1.2rem; padding-left:20px; }
+.tl-item::before { content:''; position:absolute; left:-22px; top:6px; width:12px; height:12px; border-radius:50%; background: var(--hl-green); border:2px solid #fff; box-shadow: 0 0 0 2px var(--hl-green); }
+.tl-item .tl-date { font-size:0.75rem; font-weight:700; color: var(--hl-green); text-transform:uppercase; }
+.tl-item .tl-title { font-size:0.9rem; font-weight:600; }
+.tl-item .tl-desc { font-size:0.82rem; color: var(--hl-muted); }
+
+/* COACHING CHAT */
+.chat-container { background: var(--hl-dark); border-radius: var(--radius); padding:0; overflow:hidden; max-height:500px; display:flex; flex-direction:column; }
+.chat-header { background: var(--hl-navy); padding:14px 20px; display:flex; align-items:center; gap:10px; }
+.chat-header .dot { width:10px; height:10px; border-radius:50%; background: var(--hl-green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.chat-header span { color:#fff; font-weight:600; font-size:0.9rem; }
+.chat-msgs { flex:1; padding:16px 20px; overflow-y:auto; max-height:320px; }
+.chat-msg { margin-bottom:12px; max-width:85%; }
+.chat-msg.bot { margin-right:auto; }
+.chat-msg.user { margin-left:auto; }
+.chat-msg .bubble { padding:10px 16px; border-radius:16px; font-size:0.88rem; line-height:1.5; }
+.chat-msg.bot .bubble { background: var(--hl-mid); color:#fff; border-bottom-left-radius:4px; }
+.chat-msg.user .bubble { background: var(--hl-green); color:#fff; border-bottom-right-radius:4px; }
+.chat-prompts { padding:12px 20px; background: rgba(255,255,255,0.05); display:flex; flex-wrap:wrap; gap:6px; border-top:1px solid rgba(255,255,255,0.1); }
+.chat-prompt-btn { background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.85); padding:6px 14px; border-radius:20px; font-size:0.78rem; cursor:pointer; transition:all 0.2s; }
+.chat-prompt-btn:hover { background: var(--hl-green); color:#fff; border-color: var(--hl-green); }
+
+/* FAQ ACCORDION */
+.faq-item { border:1px solid var(--hl-border); border-radius: var(--radius-sm); margin-bottom:8px; overflow:hidden; }
+.faq-q { padding:14px 18px; background:#fff; font-weight:600; font-size:0.9rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:background 0.2s; }
+.faq-q:hover { background: var(--hl-light); }
+.faq-q .arrow { transition:transform 0.3s; font-size:0.8rem; color: var(--hl-muted); }
+.faq-item.open .faq-q .arrow { transform:rotate(180deg); }
+.faq-a { padding:0 18px; max-height:0; overflow:hidden; transition: max-height 0.3s ease, padding 0.3s ease; font-size:0.88rem; background:#fafafa; }
+.faq-item.open .faq-a { max-height:600px; padding:14px 18px; }
+
+/* COACHING CARDS */
+.coach-cards { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:14px; margin:1rem 0; }
+.coach-card { background:#fff; border-radius: var(--radius-sm); padding:1.2rem; border-left:4px solid var(--hl-green); box-shadow: var(--shadow-sm); cursor:pointer; transition: all 0.2s; }
+.coach-card:hover { box-shadow: var(--shadow-md); transform:translateY(-2px); }
+.coach-card .cc-tag { font-size:0.65rem; text-transform:uppercase; letter-spacing:1px; font-weight:700; margin-bottom:6px; }
+.coach-card .cc-title { font-weight:700; font-size:0.92rem; margin-bottom:6px; }
+.coach-card .cc-body { font-size:0.82rem; color: var(--hl-muted); display:none; }
+.coach-card.expanded .cc-body { display:block; }
+.tag-situation { color: var(--hl-orange); }
+.tag-conversation { color: var(--hl-blue); }
+.tag-development { color: var(--hl-purple); }
+.border-orange { border-left-color: var(--hl-orange); }
+.border-blue { border-left-color: var(--hl-blue); }
+.border-purple { border-left-color: var(--hl-purple); }
+
+/* TABS inside content */
+.inner-tabs { display:flex; gap:0; border-bottom:2px solid var(--hl-border); margin-bottom:1.5rem; }
+.inner-tab { padding:10px 20px; font-size:0.85rem; font-weight:600; color: var(--hl-muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all 0.2s; background:none; border-top:none; border-left:none; border-right:none; }
+.inner-tab:hover { color: var(--hl-dark); }
+.inner-tab.active { color: var(--hl-green); border-bottom-color: var(--hl-green); }
+
+/* TOOLTIP / INFO BOX */
+.info-box { background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-left:4px solid var(--hl-green); padding:14px 18px; border-radius:0 var(--radius-sm) var(--radius-sm) 0; margin:1rem 0; font-size:0.88rem; }
+.info-box.warn { background: linear-gradient(135deg, #fff3e0 0%, #fff8e1 100%); border-left-color: var(--hl-orange); }
+.info-box.blue { background: linear-gradient(135deg, #e3f2fd 0%, #e8eaf6 100%); border-left-color: var(--hl-blue); }
+
+/* KPI PILLS */
+.kpi-row { display:flex; gap:12px; margin:1rem 0; flex-wrap:wrap; }
+.kpi { background:#fff; border-radius: var(--radius-sm); padding:1rem 1.4rem; box-shadow: var(--shadow-sm); border:1px solid var(--hl-border); text-align:center; flex:1; min-width:120px; }
+.kpi .kpi-val { font-size:1.5rem; font-weight:800; color: var(--hl-green); }
+.kpi .kpi-label { font-size:0.72rem; color: var(--hl-muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+
+/* SECTION HIDES */
+.section { display:none; }
+.section.active { display:block; }
+
+/* TABLE */
+.tbl { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.85rem; }
+.tbl th { background: var(--hl-navy); color:#fff; padding:10px 14px; text-align:left; font-weight:600; }
+.tbl td { padding:10px 14px; border-bottom:1px solid var(--hl-border); }
+.tbl tr:hover td { background: var(--hl-light); }
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); }
+  .main { margin-left:0; padding:1.5rem; }
+  .rating-grid { grid-template-columns: repeat(2, 1fr); }
+  .flow { flex-wrap:wrap; }
+  .flow-step:not(:last-child)::after { display:none; }
+}
+
+/* PRINT */
+@media print { .sidebar, .topnav { display:none; } .main { margin:0; } }
+
+/* SMOOTH */
+html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="logo">
+    <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#00C853"/><path d="M8 14l4 4 8-8" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span><span class="hl">HighLevel</span> Performance Hub</span>
+    <span class="badge">2025-26</span>
+  </div>
+  <div class="module-tabs">
+    <button class="module-tab active" onclick="switchModule('performance')">Performance Process</button>
+    <button class="module-tab" onclick="switchModule('rewards')">Rewards Strategy</button>
+    <button class="module-tab" onclick="switchModule('coach')">Performance Coach</button>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <!-- Performance nav -->
+  <div id="nav-performance">
+    <div class="section-label">Overview</div>
+    <a href="#" class="active" onclick="showPage('perf-home',this)"><span class="icon">📊</span> Dashboard</a>
+    <a href="#" onclick="showPage('perf-philosophy',this)"><span class="icon">💡</span> Philosophy & Principles</a>
+    <a href="#" onclick="showPage('perf-timeline',this)"><span class="icon">📅</span> Timeline & Milestones</a>
+    <a href="#" onclick="showPage('perf-ratings',this)"><span class="icon">⭐</span> Rating Framework</a>
+    <div class="section-label">By Role</div>
+    <a href="#" onclick="showPage('perf-employee',this)"><span class="icon">👤</span> Employee Guide</a>
+    <a href="#" onclick="showPage('perf-manager',this)"><span class="icon">👥</span> Manager / PBP Guide</a>
+    <a href="#" onclick="showPage('perf-leader',this)"><span class="icon">🏛️</span> Leader / SLT Guide</a>
+    <div class="section-label">Key Processes</div>
+    <a href="#" onclick="showPage('perf-calibration',this)"><span class="icon">⚖️</span> Calibration</a>
+    <a href="#" onclick="showPage('perf-promotion',this)"><span class="icon">🚀</span> Promotions</a>
+    <a href="#" onclick="showPage('perf-midyear',this)"><span class="icon">📌</span> Mid-Year Cycle</a>
+  </div>
+  <!-- Rewards nav -->
+  <div id="nav-rewards" style="display:none">
+    <div class="section-label">Strategy</div>
+    <a href="#" class="active" onclick="showPage('rew-home',this)"><span class="icon">💰</span> Overview</a>
+    <a href="#" onclick="showPage('rew-philosophy',this)"><span class="icon">🎯</span> Philosophy & Principles</a>
+    <a href="#" onclick="showPage('rew-3ps',this)"><span class="icon">📐</span> 3 Ps Framework</a>
+    <div class="section-label">Pay Elements</div>
+    <a href="#" onclick="showPage('rew-base',this)"><span class="icon">💵</span> Base Salary</a>
+    <a href="#" onclick="showPage('rew-variable',this)"><span class="icon">📈</span> Variable Pay</a>
+    <a href="#" onclick="showPage('rew-equity',this)"><span class="icon">📊</span> Equity</a>
+    <a href="#" onclick="showPage('rew-benefits',this)"><span class="icon">🏥</span> Benefits & Wellbeing</a>
+    <div class="section-label">Governance</div>
+    <a href="#" onclick="showPage('rew-governance',this)"><span class="icon">🔒</span> Governance</a>
+    <a href="#" onclick="showPage('rew-benchmarking',this)"><span class="icon">📊</span> Benchmarking</a>
+  </div>
+  <!-- Coach nav -->
+  <div id="nav-coach" style="display:none">
+    <div class="section-label">Coaching Tools</div>
+    <a href="#" class="active" onclick="showPage('coach-home',this)"><span class="icon">🤖</span> Ask the Coach</a>
+    <a href="#" onclick="showPage('coach-faq',this)"><span class="icon">❓</span> FAQ by Scenario</a>
+    <a href="#" onclick="showPage('coach-cards',this)"><span class="icon">🃏</span> Coaching Cards</a>
+    <div class="section-label">Situations</div>
+    <a href="#" onclick="showPage('coach-emp',this)"><span class="icon">👤</span> Employee Situations</a>
+    <a href="#" onclick="showPage('coach-mgr',this)"><span class="icon">👥</span> Manager Situations</a>
+    <a href="#" onclick="showPage('coach-ldr',this)"><span class="icon">🏛️</span> Leader Situations</a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="layout">
+<div class="main" id="mainContent">
+
+<!-- ==================== PERFORMANCE MODULE ==================== -->
+
+<!-- PERF HOME / DASHBOARD -->
+<div class="section active" id="perf-home">
+  <h1>Performance Review Dashboard</h1>
+  <p class="subtitle">Your complete guide to the HighLevel Performance Review Process 2025-26</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-val">4</div><div class="kpi-label">Point Rating Scale</div></div>
+    <div class="kpi"><div class="kpi-val">5</div><div class="kpi-label">Process Stages</div></div>
+    <div class="kpi"><div class="kpi-val">3</div><div class="kpi-label">Calibration Levels</div></div>
+    <div class="kpi"><div class="kpi-val">Jun 1</div><div class="kpi-label">Effective Date</div></div>
+  </div>
+
+  <div class="card">
+    <h2>🔄 Performance Review Process Flow</h2>
+    <div class="flow">
+      <div class="flow-step"><div class="circle">1</div><div class="label">Self Review</div><div class="sub">Apr 20-30</div></div>
+      <div class="flow-step"><div class="circle">2</div><div class="label">Peer + Manager Review</div><div class="sub">Apr 27 - May 8</div></div>
+      <div class="flow-step"><div class="circle">3</div><div class="label">Calibration</div><div class="sub">May 11 - Jun 10</div></div>
+      <div class="flow-step"><div class="circle">4</div><div class="label">Exec Approvals</div><div class="sub">Jun 12-19</div></div>
+      <div class="flow-step"><div class="circle">5</div><div class="label">Communication</div><div class="sub">Jun 22 - Jul 3</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⭐ Rating Framework at a Glance</h2>
+    <div class="rating-grid">
+      <div class="rating-card rc-green"><div class="pct">~20%</div><div class="rtitle">Exceeds High Expectations</div>Regularly goes beyond; delivers high-quality work and strong impact</div>
+      <div class="rating-card rc-blue"><div class="pct">~50%</div><div class="rtitle">Meets High Expectations</div>Consistently fulfills responsibilities; delivers expected results</div>
+      <div class="rating-card rc-orange"><div class="pct">~20%</div><div class="rtitle">Sometimes Meets</div>Inconsistently meets expectations; requires development support</div>
+      <div class="rating-card rc-red"><div class="pct">~10%</div><div class="rtitle">Does Not Meet</div>Performance below expectations; requires continued effort and support</div>
+    </div>
+    <div class="info-box">These percentages are directional benchmarks for SLT leader calibration discussions, not forced distributions.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Core Performance Equation</h2>
+    <div style="text-align:center; padding:1.5rem; background: linear-gradient(135deg, var(--hl-dark), var(--hl-navy)); border-radius: var(--radius-sm); color:#fff; margin:0.5rem 0;">
+      <div style="font-size:1.8rem; font-weight:800; letter-spacing:1px;">Impact = Outcomes <span style="color:var(--hl-green)">+</span> Behaviours</div>
+      <div style="font-size:0.85rem; opacity:0.8; margin-top:8px;">What you deliver <span style="color:var(--hl-green)">+</span> How you deliver it</div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:1rem;">
+      <div class="info-box"><strong>Outcomes (What)</strong> — Results, deliverables, measurable impact against goals and role expectations</div>
+      <div class="info-box blue"><strong>Behaviours (How)</strong> — Customer-centricity, bias for action, growth-mindedness, collaboration, ownership</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Quick Start by Role</h2>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px;">
+      <div style="background:var(--hl-light); border-radius:var(--radius-sm); padding:1.2rem; cursor:pointer;" onclick="showPage('perf-employee',document.querySelector('[onclick*=perf-employee]'))">
+        <div style="font-size:1.5rem; margin-bottom:6px;">👤</div>
+        <div style="font-weight:700; margin-bottom:4px;">I'm an Employee</div>
+        <div style="font-size:0.82rem; color:var(--hl-muted);">Self-review tips, peer feedback guide, career aspirations framework</div>
+      </div>
+      <div style="background:#e3f2fd; border-radius:var(--radius-sm); padding:1.2rem; cursor:pointer;" onclick="showPage('perf-manager',document.querySelector('[onclick*=perf-manager]'))">
+        <div style="font-size:1.5rem; margin-bottom:6px;">👥</div>
+        <div style="font-weight:700; margin-bottom:4px;">I'm a Manager / PBP</div>
+        <div style="font-size:0.82rem; color:var(--hl-muted);">Writing reviews, rating employees, nominations, calibration prep</div>
+      </div>
+      <div style="background:#f3e5f5; border-radius:var(--radius-sm); padding:1.2rem; cursor:pointer;" onclick="showPage('perf-leader',document.querySelector('[onclick*=perf-leader]'))">
+        <div style="font-size:1.5rem; margin-bottom:6px;">🏛️</div>
+        <div style="font-weight:700; margin-bottom:4px;">I'm a Leader / SLT</div>
+        <div style="font-size:0.82rem; color:var(--hl-muted);">Calibration stages, distribution guidelines, exec approvals</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PERF PHILOSOPHY -->
+<div class="section" id="perf-philosophy">
+  <h1>Philosophy & Guiding Principles</h1>
+  <p class="subtitle">The foundation that drives how we evaluate, grow, and recognize performance at HighLevel</p>
+
+  <div class="card">
+    <h2>💡 Performance Philosophy</h2>
+    <p>HighLevel's performance management process is designed to help employees understand where they have made impact and where they can grow. It enables managers to provide clear, actionable feedback and development guidance, connects individual contributions to team and company goals, and grounds performance outcomes in clarity, consistency, and fairness.</p>
+  </div>
+
+  <div class="card">
+    <h2>🧭 Five Guiding Principles</h2>
+    <div style="display:grid; gap:12px; margin-top:0.5rem;">
+      <div class="info-box"><strong>1. Performance = Outcomes + Behaviours</strong> — You are assessed on what you deliver and how you deliver it. Both matter equally.</div>
+      <div class="info-box blue"><strong>2. Customer-Centricity</strong> — Creating customer value is the north star and key evaluation lens for all roles.</div>
+      <div class="info-box" style="border-left-color:var(--hl-purple); background:linear-gradient(135deg,#f3e5f5,#ede7f6);"><strong>3. Bias for Action</strong> — We recognize ownership, speed, experimentation, and decisiveness.</div>
+      <div class="info-box warn"><strong>4. Growth-Mindedness</strong> — Every employee should receive meaningful developmental input. We encourage learning from failures.</div>
+      <div class="info-box blue"><strong>5. Ongoing Feedback</strong> — Reviews reflect year-round conversations and feedback, not just a once-a-year snapshot.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔑 Key Changes in 2025</h2>
+    <table class="tbl">
+      <tr><th>Area</th><th>What Changed</th></tr>
+      <tr><td>Rating Scale</td><td>Shifted from 3-point to 4-point scale for clearer differentiation</td></tr>
+      <tr><td>Review Flow</td><td>Self and Manager reviews are now sequential (not parallel)</td></tr>
+      <tr><td>System</td><td>Transition from BambooHR to Darwinbox</td></tr>
+      <tr><td>Manager Empowerment</td><td>Managers now nominate peers, propose ratings, and nominate for promotion</td></tr>
+      <tr><td>Calibration</td><td>Defined 3-level calibration process introduced</td></tr>
+      <tr><td>Distribution</td><td>Directional distribution benchmarks introduced for calibration</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- PERF TIMELINE -->
+<div class="section" id="perf-timeline">
+  <h1>Timeline & Milestones</h1>
+  <p class="subtitle">Key dates for the 2025-26 performance review cycle</p>
+
+  <div class="card">
+    <h2>📅 Annual Review Cycle 2026</h2>
+    <div class="info-box"><strong>Review Period:</strong> June 1, 2025 – May 30, 2026 &nbsp;|&nbsp; <strong>Eligibility:</strong> Onboarded by Dec 17, 2025 &nbsp;|&nbsp; <strong>Effective Date:</strong> June 1, 2026</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-date">Apr 20, 2026</div><div class="tl-title">Review Launch & Self Reviews Open</div><div class="tl-desc">Darwinbox module goes live; employees begin self-assessments</div></div>
+      <div class="tl-item"><div class="tl-date">Apr 30, 2026</div><div class="tl-title">Self Reviews Due</div><div class="tl-desc">All employees submit self-reviews; auto-routed to managers</div></div>
+      <div class="tl-item"><div class="tl-date">Apr 27 - May 8, 2026</div><div class="tl-title">Peer + Manager Reviews</div><div class="tl-desc">Managers nominate peers, collect feedback, complete manager assessments and propose ratings</div></div>
+      <div class="tl-item"><div class="tl-date">May 11 - Jun 10, 2026</div><div class="tl-title">Calibration Phase</div><div class="tl-desc">3-stage calibration: Functional → Departmental → Final (with Co-Founder & CPO)</div></div>
+      <div class="tl-item"><div class="tl-date">Jun 12-19, 2026</div><div class="tl-title">Executive Approvals</div><div class="tl-desc">CPO approval for ratings; CFO approval for budget/payroll</div></div>
+      <div class="tl-item"><div class="tl-date">Jun 22 - Jul 3, 2026</div><div class="tl-title">Performance Conversations</div><div class="tl-desc">Managers communicate final ratings, feedback, comp decisions, and development plans via 1:1s</div></div>
+      <div class="tl-item"><div class="tl-date">June 1, 2026</div><div class="tl-title">Compensation & Promotions Effective</div><div class="tl-desc">Paid retrospectively in July payroll</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📌 Mid-Year Promotion Cycle</h2>
+    <div class="info-box warn">The mid-year cycle is for exceptional, time-sensitive cases only. The central question: <strong>"Why now, not later?"</strong></div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-date">Early Nov</div><div class="tl-title">Review Launch</div><div class="tl-desc">Mid-year nominations open</div></div>
+      <div class="tl-item"><div class="tl-date">End Nov</div><div class="tl-title">Nominations & Calibrations</div><div class="tl-desc">Complete by end of November</div></div>
+      <div class="tl-item"><div class="tl-date">December</div><div class="tl-title">Exec Approvals & Communication</div><div class="tl-desc">Dec 10-20 communication; letters via Darwinbox</div></div>
+      <div class="tl-item"><div class="tl-date">Jan 1, 2026</div><div class="tl-title">Effective Date</div><div class="tl-desc">Compensation and promotion changes take effect</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PERF RATINGS -->
+<div class="section" id="perf-ratings">
+  <h1>Rating Framework</h1>
+  <p class="subtitle">The 4-point scale and what each level means in practice</p>
+
+  <div class="card">
+    <h2>⭐ 4-Point Rating Scale</h2>
+    <div class="rating-grid">
+      <div class="rating-card rc-green"><div class="pct">~20%</div><div class="rtitle">Exceeds High Expectations</div></div>
+      <div class="rating-card rc-blue"><div class="pct">~50%</div><div class="rtitle">Meets High Expectations</div></div>
+      <div class="rating-card rc-orange"><div class="pct">~20%</div><div class="rtitle">Sometimes Meets</div></div>
+      <div class="rating-card rc-red"><div class="pct">~10%</div><div class="rtitle">Does Not Meet</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📖 Detailed Rating Definitions</h2>
+    <div class="faq-item open">
+      <div class="faq-q" onclick="toggleFaq(this)">Exceeds High Expectations <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p><strong>Definition:</strong> Regularly goes beyond expectations, delivering high-quality work and strong impact.</p>
+        <p><strong>What this looks like:</strong></p>
+        <ul>
+          <li>Consistently delivers outcomes that are above and beyond role requirements</li>
+          <li>Takes ownership of initiatives, drives innovation, and mentors others</li>
+          <li>Proactively identifies problems and implements solutions before being asked</li>
+          <li>Demonstrates all core behaviors at a high level across the entire review period</li>
+        </ul>
+        <p><strong>Example (Tech):</strong> Led adoption of a key product feature that increased user engagement by 30%, mentored two junior developers, and proactively redesigned test automation that reduced regression time by 40%.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Meets High Expectations <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p><strong>Definition:</strong> Consistently fulfills role responsibilities and delivers expected results.</p>
+        <p><strong>What this looks like:</strong></p>
+        <ul>
+          <li>Reliably meets all role expectations with quality output</li>
+          <li>Demonstrates solid competency in technical and behavioral areas</li>
+          <li>Handles responsibilities independently and collaborates effectively</li>
+          <li>Shows growth and learning throughout the review period</li>
+        </ul>
+        <p><strong>Example (Customer Success):</strong> Maintained CSAT above 90%, resolved escalations within SLA, contributed to knowledge base documentation, and actively participated in team initiatives.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Sometimes Meets High Expectations <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p><strong>Definition:</strong> Inconsistently meets expectations; requires development in key areas and additional support.</p>
+        <p><strong>What this looks like:</strong></p>
+        <ul>
+          <li>Delivers results that are uneven — strong in some areas, falling short in others</li>
+          <li>May need reminders or additional guidance to meet deadlines or quality standards</li>
+          <li>Shows potential but hasn't yet demonstrated consistency</li>
+          <li>Development areas have been identified but progress is partial</li>
+        </ul>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Does Not Meet High Expectations <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p><strong>Definition:</strong> Performance does not meet expectations; requires continued effort and support to improve.</p>
+        <p><strong>What this looks like:</strong></p>
+        <ul>
+          <li>Consistently falls short of role requirements despite feedback and support</li>
+          <li>Limited accountability for outcomes and limited response to coaching</li>
+          <li>Quality or productivity significantly below expected levels</li>
+          <li>May require a Performance Improvement Plan (PIP)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Business Impact Assessment</h2>
+    <p>Managers also assess: <em>"If this employee were to leave, what would be the impact?"</em></p>
+    <table class="tbl">
+      <tr><th>Level</th><th>Description</th></tr>
+      <tr><td style="color:#2E7D32; font-weight:700;">High Impact</td><td>Specialized skills, deep company knowledge difficult to replace; significant operational disruption</td></tr>
+      <tr><td style="color:#E65100; font-weight:700;">Moderate Impact</td><td>Valuable expertise; disruption manageable with a transition plan</td></tr>
+      <tr><td style="color:var(--hl-muted); font-weight:700;">Low Impact</td><td>Role and knowledge transitions smoothly with minimal disruption</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== EMPLOYEE GUIDE ==================== -->
+<div class="section" id="perf-employee">
+  <h1>👤 Employee Guide</h1>
+  <p class="subtitle">Everything you need to navigate your performance review with confidence</p>
+
+  <div class="card">
+    <h2>📝 Your Self-Review: 3 Questions to Answer</h2>
+    <div class="info-box">Think of your self-review as your opportunity to tell your story — what you achieved, how you grew, and where you want to go.</div>
+
+    <h3>Q1: Key Contributions, Achievements & Wins</h3>
+    <p>Provide examples with data. Think about outcomes you delivered and how you delivered them.</p>
+    <div style="background:#f9f9f9; border-radius:var(--radius-sm); padding:1rem; margin:0.5rem 0; font-size:0.85rem;">
+      <strong>Strong example:</strong> "Led the redesign of the onboarding flow, increasing trial-to-paid conversion by 18%. Collaborated with 3 cross-functional teams and delivered 2 weeks ahead of schedule."<br><br>
+      <strong>Weak example:</strong> "Worked on onboarding stuff and did a good job."
+    </div>
+
+    <h3>Q2: Areas for Improvement & Support Needed</h3>
+    <p>Be honest about where you can grow and specific about what support would help.</p>
+    <div style="background:#f9f9f9; border-radius:var(--radius-sm); padding:1rem; margin:0.5rem 0; font-size:0.85rem;">
+      <strong>Strong example:</strong> "I want to improve my ability to influence cross-functional stakeholders. Having a mentor from the product leadership team would help me develop this skill."<br><br>
+      <strong>Weak example:</strong> "I could be better at communication."
+    </div>
+
+    <h3>Q3: Career Aspirations & Growth</h3>
+    <p>Share where you see yourself heading and what the organization can do to help you get there.</p>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Tips for a Great Self-Review</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="info-box"><strong>Reflect ahead of time</strong> — Don't wait until the form opens. Start noting your wins throughout the year.</div>
+      <div class="info-box blue"><strong>Use the formula</strong> — Outcomes (What) + Behaviours (How) = Impact. Frame every example this way.</div>
+      <div class="info-box" style="border-left-color:var(--hl-purple); background:linear-gradient(135deg,#f3e5f5,#ede7f6);"><strong>Bring the data</strong> — Numbers, metrics, and specific examples make your story compelling.</div>
+      <div class="info-box warn"><strong>Own your growth</strong> — Be specific about development areas and the support you need.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🤝 Peer Review: What to Know</h2>
+    <p>Your manager will nominate peers to provide feedback on your performance. Here's what peer reviewers are asked:</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:0.8rem 0;">
+      <div style="background:var(--hl-light); padding:1rem; border-radius:var(--radius-sm);"><strong>Question 1:</strong> What has [Name] done particularly well this year?</div>
+      <div style="background:#e3f2fd; padding:1rem; border-radius:var(--radius-sm);"><strong>Question 2:</strong> What areas could [Name] improve or develop further?</div>
+    </div>
+    <div class="info-box">Peer feedback is <strong>confidential</strong> — visible only to your manager and respective SLT. Use this knowledge to be authentic and constructive when giving peer feedback to others.</div>
+  </div>
+
+  <div class="card">
+    <h2>💬 How to Navigate the Review Conversation</h2>
+    <ul>
+      <li><strong>Listen with openness</strong> — View feedback as input, not judgment</li>
+      <li><strong>Make it two-way</strong> — Ask questions, share your perspective, discuss development</li>
+      <li><strong>Focus forward</strong> — Use the conversation to align on next-cycle goals and growth</li>
+      <li><strong>Follow up</strong> — Document key takeaways and your development commitments</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📊 Examples by Function</h2>
+    <div class="inner-tabs">
+      <button class="inner-tab active" onclick="switchInner(this,'emp-tech')">Tech/Engineering</button>
+      <button class="inner-tab" onclick="switchInner(this,'emp-gtm')">GTM/Sales</button>
+      <button class="inner-tab" onclick="switchInner(this,'emp-cs')">Customer Success</button>
+      <button class="inner-tab" onclick="switchInner(this,'emp-mkt')">Marketing/Ops</button>
+    </div>
+    <div id="emp-tech" class="inner-content">
+      <p><strong>Outcomes:</strong> Feature delivery and adoption metrics, system reliability improvements, test automation coverage, code quality scores, support ticket reduction.</p>
+      <p><strong>Behaviours:</strong> Mentoring junior devs, knowledge transfer sessions, proactive bug identification, cross-team collaboration on architecture decisions.</p>
+      <p><strong>Example:</strong> "Shipped the notifications redesign that boosted DAU by 12%. Set up automated test coverage from 40% to 72%. Mentored 2 interns through their first production deployments."</p>
+    </div>
+    <div id="emp-gtm" class="inner-content" style="display:none;">
+      <p><strong>Outcomes:</strong> Revenue targets, pipeline generation, conversion rates, deal velocity, customer acquisition cost improvements.</p>
+      <p><strong>Behaviours:</strong> Cross-functional collaboration with product/CS, customer relationship management, proactive market intelligence sharing.</p>
+      <p><strong>Example:</strong> "Exceeded quarterly target by 125%. Built a repeatable outbound sequence that generated $1.2M in qualified pipeline. Partnered with CS to reduce churn in my book of business by 8%."</p>
+    </div>
+    <div id="emp-cs" class="inner-content" style="display:none;">
+      <p><strong>Outcomes:</strong> CSAT scores, ticket resolution times, escalation handling, shift performance metrics, knowledge base contributions.</p>
+      <p><strong>Behaviours:</strong> Proactive problem-solving, customer empathy, team support during peak periods, SOP creation.</p>
+      <p><strong>Example:</strong> "Maintained 94% CSAT across 1,200+ tickets. Created 15 new knowledge base articles reducing repeat queries by 20%. Volunteered as shift lead during Q3 surge."</p>
+    </div>
+    <div id="emp-mkt" class="inner-content" style="display:none;">
+      <p><strong>Outcomes:</strong> Event coordination results, vendor management efficiency, budget adherence, campaign performance, content engagement metrics.</p>
+      <p><strong>Behaviours:</strong> Cross-functional alignment, brand consistency, data-driven decision making, stakeholder communication.</p>
+      <p><strong>Example:</strong> "Coordinated 4 major product launch events reaching 50K+ attendees. Negotiated vendor contracts saving 15% on annual spend. Built reporting dashboard adopted by 3 teams."</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MANAGER GUIDE ==================== -->
+<div class="section" id="perf-manager">
+  <h1>👥 Manager / PBP Guide</h1>
+  <p class="subtitle">Your playbook for guiding, growing, and empowering your team through the review process</p>
+
+  <div class="card">
+    <h2>📋 Your 6 Responsibilities</h2>
+    <div class="flow">
+      <div class="flow-step"><div class="circle">1</div><div class="label">Nominate Peers</div><div class="sub">After self-review</div></div>
+      <div class="flow-step"><div class="circle">2</div><div class="label">Review Inputs</div><div class="sub">Self + peer feedback</div></div>
+      <div class="flow-step"><div class="circle">3</div><div class="label">Write Feedback</div><div class="sub">What + How + Impact</div></div>
+      <div class="flow-step"><div class="circle">4</div><div class="label">Propose Ratings</div><div class="sub">+ Promotion noms</div></div>
+      <div class="flow-step"><div class="circle">5</div><div class="label">Calibrate</div><div class="sub">With PBP & leaders</div></div>
+      <div class="flow-step"><div class="circle">6</div><div class="label">Deliver Feedback</div><div class="sub">1:1 conversation</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Manager Review: 4 Questions</h2>
+    <div style="display:grid; gap:10px; margin:0.5rem 0;">
+      <div class="info-box"><strong>Q1:</strong> What were some of [employee]'s key wins and contributions this review period?</div>
+      <div class="info-box blue"><strong>Q2:</strong> What are [employee]'s areas of improvement, and how can they work on them?</div>
+      <div class="info-box" style="border-left-color:var(--hl-purple); background:linear-gradient(135deg,#f3e5f5,#ede7f6);"><strong>Q3:</strong> How can you, as a manager, help [employee] grow and develop?</div>
+      <div class="info-box warn"><strong>Q4:</strong> If this employee were to leave, to what extent would their absence impact business continuity?</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>✍️ Writing Effective Feedback</h2>
+    <table class="tbl">
+      <tr><th style="width:50%;">Do This</th><th>Not This</th></tr>
+      <tr><td>"Led the migration project, completing it 2 weeks early and reducing downtime by 30%"</td><td>"Did good work on the migration"</td></tr>
+      <tr><td>"Needs to improve stakeholder communication — missed 3 status updates in Q3"</td><td>"Communication could be better"</td></tr>
+      <tr><td>"Demonstrated customer-centricity by proactively reaching out to 15 at-risk accounts"</td><td>"Is customer-focused"</td></tr>
+      <tr><td>"Showed bias for action by proposing and shipping the hotfix within 4 hours"</td><td>"Responds quickly to issues"</td></tr>
+    </table>
+    <div class="info-box">Use the <strong>What + How + Impact</strong> lens: What they did + How they did it + What impact it created.</div>
+  </div>
+
+  <div class="card">
+    <h2>👥 Peer Reviewer Nomination Guidelines</h2>
+    <table class="tbl">
+      <tr><th>Employee Level</th><th>Peer Nominations</th></tr>
+      <tr><td>S3 – P2 (Junior)</td><td>Optional but good to have</td></tr>
+      <tr><td>P3/M2 – P4/M3 (Mid)</td><td>Minimum 2 additional reviewers strongly encouraged</td></tr>
+      <tr><td>P5/M4 and above (Senior)</td><td>Minimum 3 detailed additional reviewer inputs</td></tr>
+    </table>
+    <div class="info-box blue"><strong>Who to nominate:</strong> Stakeholders who benefited from the employee's work, project-familiar peers, cross-level/function mix with visibility into contributions.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Applying the Rating Scale</h2>
+    <p>When assigning ratings, consider the full review period (not just recent events) and evaluate both outcomes and behaviors.</p>
+    <div class="rating-grid">
+      <div class="rating-card rc-green"><div class="rtitle">Exceeds</div>Goes above and beyond; drives innovation; mentors others; high-quality + strong impact</div>
+      <div class="rating-card rc-blue"><div class="rtitle">Meets</div>Reliably delivers; solid competencies; handles responsibilities independently</div>
+      <div class="rating-card rc-orange"><div class="rtitle">Sometimes Meets</div>Uneven results; needs guidance; potential exists but consistency lacking</div>
+      <div class="rating-card rc-red"><div class="rtitle">Does Not Meet</div>Falls short despite support; limited accountability; may need PIP</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💬 Delivering the Review Conversation</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div>
+        <h3>Preparing</h3>
+        <ul>
+          <li>Review all inputs: self-assessment, peer feedback, your own observations</li>
+          <li>Have specific examples ready for each key point</li>
+          <li>Anticipate questions and prepare thoughtful responses</li>
+          <li>Block adequate time — don't rush</li>
+        </ul>
+      </div>
+      <div>
+        <h3>During the Conversation</h3>
+        <ul>
+          <li>Share the final rating, key feedback, and comp/promotion decisions</li>
+          <li>Connect feedback to development opportunities</li>
+          <li>Make it two-way — ask for their perspective</li>
+          <li>Co-create a development plan for the next cycle</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LEADER / SLT GUIDE ==================== -->
+<div class="section" id="perf-leader">
+  <h1>🏛️ Leader / SLT Guide</h1>
+  <p class="subtitle">Strategic oversight of calibration, promotions, and organizational performance health</p>
+
+  <div class="card">
+    <h2>⚖️ Three-Stage Calibration Process</h2>
+    <p>Calibration ensures consistency, reduces bias, and validates ratings across the organization. It is grounded in role expectations, not peer comparisons.</p>
+
+    <div style="display:grid; gap:14px; margin:1rem 0;">
+      <div style="background:var(--hl-light); border-radius:var(--radius-sm); padding:1.2rem; border-left:4px solid #4CAF50;">
+        <strong style="color:#2E7D32;">Stage 1: Functional Review</strong><br>
+        <strong>Who:</strong> Director + PBP + Line Managers<br>
+        <strong>Focus:</strong> Rating alignment to role expectations, justification quality, outlier identification, evidence sufficiency<br>
+        <strong>Purpose:</strong> Ensure consistency and reduce bias within functional teams
+      </div>
+      <div style="background:#e3f2fd; border-radius:var(--radius-sm); padding:1.2rem; border-left:4px solid #42A5F5;">
+        <strong style="color:#1565C0;">Stage 2: Departmental Review</strong><br>
+        <strong>Who:</strong> Director + HOD/SLT + Optional Cross-Functional<br>
+        <strong>Focus:</strong> Consolidated ratings and promotions across function; shared understanding of level expectations<br>
+        <strong>Note:</strong> L3→L4+ promotions require joint discussion with SLT leader, relevant Directors, and Sr. Managers
+      </div>
+      <div style="background:#f3e5f5; border-radius:var(--radius-sm); padding:1.2rem; border-left:4px solid #AB47BC;">
+        <strong style="color:#7B1FA2;">Stage 3: Final Review</strong><br>
+        <strong>Who:</strong> SLT Leader + Co-Founder + CPO<br>
+        <strong>Focus:</strong> Executive-level validation of finalized ratings and promotions<br>
+        <strong>Outcome:</strong> PBP obtains CPO approval; ratings finalized in system
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Distribution Guidelines</h2>
+    <div class="rating-grid">
+      <div class="rating-card rc-green"><div class="pct">~20%</div><div class="rtitle">Exceeds</div></div>
+      <div class="rating-card rc-blue"><div class="pct">~50%</div><div class="rtitle">Meets</div></div>
+      <div class="rating-card rc-orange"><div class="pct">~20%</div><div class="rtitle">Sometimes Meets</div></div>
+      <div class="rating-card rc-red"><div class="pct">~10%</div><div class="rtitle">Does Not Meet</div></div>
+    </div>
+    <div class="info-box warn">These are <strong>directional benchmarks</strong> for calibration discussions, not forced distributions. Actual distributions may vary based on team and function performance.</div>
+  </div>
+
+  <div class="card">
+    <h2>🔒 Calibration Best Practices</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div>
+        <h3>Ground Rules</h3>
+        <ul>
+          <li>Use evidence: performance data, peer feedback, manager insight</li>
+          <li>Ground in role expectations, not peer comparisons</li>
+          <li>Maintain confidentiality throughout</li>
+          <li>Challenge outliers with specifics</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Watch For</h3>
+        <ul>
+          <li>Recency bias — evaluate the full review period</li>
+          <li>Central tendency — avoiding differentiation</li>
+          <li>Halo/horn effects — one strength/weakness coloring everything</li>
+          <li>Inconsistent standards across managers</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🏗️ Darwinbox Calibration Lobby Roles</h2>
+    <table class="tbl">
+      <tr><th>Role</th><th>Who</th><th>Capabilities</th></tr>
+      <tr><td>Facilitator</td><td>HOD / C-Suite</td><td>Edit rating, Add comment</td></tr>
+      <tr><td>Moderator</td><td>PBP</td><td>Edit rating, Add comment, Publish final rating</td></tr>
+      <tr><td>Owner</td><td>Directors / ADs / Sr. Managers</td><td>Create lobbies, Add/remove employees, Edit ratings, Publish final rating</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>✅ Post-Calibration Checklist</h2>
+    <ul>
+      <li>Final ratings validated and approved by CPO</li>
+      <li>Promotion decisions finalized with business cases</li>
+      <li>Compensation recommendations submitted (SLT + PBP + Rewards team)</li>
+      <li>CFO approval for budget and payroll</li>
+      <li>Managers briefed on delivering feedback conversations</li>
+      <li>People team publishes final calibrated ratings in Darwinbox</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== CALIBRATION PAGE ==================== -->
+<div class="section" id="perf-calibration">
+  <h1>⚖️ Calibration Deep Dive</h1>
+  <p class="subtitle">Ensuring consistency, fairness, and transparency across the organization</p>
+
+  <div class="card">
+    <h2>Why Calibration Matters</h2>
+    <p>Calibration is the critical step ensuring consistency, reducing bias, and validating ratings across the organization. It is grounded in role expectations — not peer comparisons — and uses evidence from performance data, peer feedback, and manager insight.</p>
+  </div>
+
+  <div class="card">
+    <h2>Three Calibration Stages</h2>
+    <div class="flow">
+      <div class="flow-step"><div class="circle">1</div><div class="label">Functional Review</div><div class="sub">Director + PBP + Managers</div></div>
+      <div class="flow-step"><div class="circle">2</div><div class="label">Departmental Review</div><div class="sub">Director + HOD/SLT</div></div>
+      <div class="flow-step"><div class="circle">3</div><div class="label">Final Review</div><div class="sub">SLT + Co-Founder + CPO</div></div>
+    </div>
+
+    <h3>Stage 1: Functional Review</h3>
+    <p>Each Director meets with PBP and line managers to ensure ratings are consistent within their function. Focus areas: justification quality, rating definition alignment, outlier identification, and evidence sufficiency.</p>
+
+    <h3>Stage 2: Departmental Review</h3>
+    <p>Each Director presents consolidated ratings and promotions to their HOD/SLT leader. In-depth review to build shared understanding of level expectations. Cross-functional calibration for P5/M4+ is encouraged.</p>
+
+    <h3>Stage 3: Final Review</h3>
+    <p>Each SLT leader reviews finalized ratings and promotions with the Co-Founder and CPO for executive-level validation. PBP obtains CPO approval of the validated ratings and promotion approvals.</p>
+  </div>
+</div>
+
+<!-- ==================== PROMOTIONS PAGE ==================== -->
+<div class="section" id="perf-promotion">
+  <h1>🚀 Promotions</h1>
+  <p class="subtitle">Criteria, process, and nomination guidance</p>
+
+  <div class="card">
+    <h2>Promotion Criteria</h2>
+    <table class="tbl">
+      <tr><th>Criterion</th><th>Details</th></tr>
+      <tr><td>Time in Role</td><td>Typically 12+ months since joining or last promotion</td></tr>
+      <tr><td>Performance Consistency</td><td>Sustained high performance is the baseline expectation</td></tr>
+      <tr><td>Role Readiness</td><td>Clear demonstration of capability, maturity, and readiness for next-level scope and complexity</td></tr>
+      <tr><td>Impact-Driven</td><td>Grounded in demonstrated impact and future potential — not tenure alone</td></tr>
+      <tr><td>Org Alignment</td><td>Must align with business needs and role availability at next level</td></tr>
+      <tr><td>Exclusion</td><td>Employees on PIP are not eligible</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📝 Nomination Template</h2>
+    <p>When nominating a direct report for promotion, substantiate their readiness with:</p>
+    <ul>
+      <li><strong>Meaningful contribution</strong> to team goals, cross-functional initiatives, and business outcomes with measurable results (KPI improvements, project impact, process improvements)</li>
+      <li><strong>Next-level evidence</strong> — demonstrate they are already operating at the next level in scope, complexity, and technical/functional excellence</li>
+      <li><strong>Initiative beyond scope</strong> — coaching others, influencing team processes, supporting hiring/onboarding</li>
+      <li><strong>Peer/stakeholder feedback</strong> supporting the case for promotion</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== MID-YEAR PAGE ==================== -->
+<div class="section" id="perf-midyear">
+  <h1>📌 Mid-Year Promotion Cycle</h1>
+  <p class="subtitle">For exceptional, time-sensitive cases where waiting creates business or talent risk</p>
+
+  <div class="card">
+    <h2>When to Use Mid-Year</h2>
+    <div class="info-box warn">The central question: <strong>"Why now, not later?"</strong> This cycle is not a second chance at annual promotions.</div>
+    <p>Valid rationale categories:</p>
+    <ul>
+      <li><strong>Business-Critical Readiness:</strong> Already performing at next level; delaying creates business continuity or delivery impact</li>
+      <li><strong>Successor Readiness:</strong> Positioned for role transition or backfill requiring next level</li>
+      <li><strong>Carried-Forward Nomination:</strong> Previously nominated during annual cycle, deferred 6 months, with maintained performance and engagement</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📅 Mid-Year Timeline</h2>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-date">Early November</div><div class="tl-title">Review Launch</div></div>
+      <div class="tl-item"><div class="tl-date">End November</div><div class="tl-title">Nominations & Calibrations Complete</div></div>
+      <div class="tl-item"><div class="tl-date">December</div><div class="tl-title">Exec Approvals</div></div>
+      <div class="tl-item"><div class="tl-date">Dec 10-20</div><div class="tl-title">Communication & Letters via Darwinbox</div></div>
+      <div class="tl-item"><div class="tl-date">January 1</div><div class="tl-title">Effective Date</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== REWARDS MODULE ==================== -->
+
+<!-- REWARDS HOME -->
+<div class="section" id="rew-home">
+  <h1>💰 Global Rewards Strategy</h1>
+  <p class="subtitle">How HighLevel attracts, motivates, and retains exceptional talent through total rewards</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-val">P50</div><div class="kpi-label">Target Positioning</div></div>
+    <div class="kpi"><div class="kpi-val">4</div><div class="kpi-label">Pay Elements</div></div>
+    <div class="kpi"><div class="kpi-val">5</div><div class="kpi-label">Design Principles</div></div>
+    <div class="kpi"><div class="kpi-val">3 Ps</div><div class="kpi-label">Framework</div></div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Total Compensation Structure</h2>
+    <div style="text-align:center; padding:1.5rem; background: linear-gradient(135deg, var(--hl-dark), var(--hl-navy)); border-radius: var(--radius-sm); color:#fff;">
+      <div style="font-size:1.4rem; font-weight:800;">Total Compensation = Base Salary <span style="color:var(--hl-green)">+</span> Variable Pay <span style="color:var(--hl-green)">+</span> Equity</div>
+      <div style="font-size:0.85rem; opacity:0.8; margin-top:8px;">Supported by Benefits & Wellbeing programs</div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:1rem;">
+      <div style="text-align:center; padding:1rem; background:var(--hl-light); border-radius:var(--radius-sm); cursor:pointer;" onclick="showPage('rew-base',document.querySelector('[onclick*=rew-base]'))">
+        <div style="font-size:1.5rem;">💵</div><div style="font-weight:700; font-size:0.85rem;">Base Salary</div>
+      </div>
+      <div style="text-align:center; padding:1rem; background:#e3f2fd; border-radius:var(--radius-sm); cursor:pointer;" onclick="showPage('rew-variable',document.querySelector('[onclick*=rew-variable]'))">
+        <div style="font-size:1.5rem;">📈</div><div style="font-weight:700; font-size:0.85rem;">Variable Pay</div>
+      </div>
+      <div style="text-align:center; padding:1rem; background:#f3e5f5; border-radius:var(--radius-sm); cursor:pointer;" onclick="showPage('rew-equity',document.querySelector('[onclick*=rew-equity]'))">
+        <div style="font-size:1.5rem;">📊</div><div style="font-weight:700; font-size:0.85rem;">Equity</div>
+      </div>
+      <div style="text-align:center; padding:1rem; background:#fff3e0; border-radius:var(--radius-sm); cursor:pointer;" onclick="showPage('rew-benefits',document.querySelector('[onclick*=rew-benefits]'))">
+        <div style="font-size:1.5rem;">🏥</div><div style="font-weight:700; font-size:0.85rem;">Benefits</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REWARDS PHILOSOPHY -->
+<div class="section" id="rew-philosophy">
+  <h1>🎯 Rewards Philosophy & Principles</h1>
+  <p class="subtitle">The guiding framework behind every compensation decision at HighLevel</p>
+
+  <div class="card">
+    <h2>Philosophy</h2>
+    <p>HighLevel's rewards strategy is designed to attract, motivate, and retain exceptional talent globally. It fosters ownership, supports holistic well-being, and reinforces a culture where meaningful impact and accelerated growth are recognized and celebrated.</p>
+  </div>
+
+  <div class="card">
+    <h2>5 Design Principles</h2>
+    <div style="display:grid; gap:12px;">
+      <div class="info-box"><strong>1. Total Rewards Mindset</strong> — Compensation, benefits, well-being, and recognition form a dynamic ecosystem supporting performance and growth.</div>
+      <div class="info-box blue"><strong>2. Market Competitive</strong> — Competitive pay and benefits across all markets. Elevated positioning for high-impact and scarce-skill roles (AI/ML, Engineering, Leadership).</div>
+      <div class="info-box" style="border-left-color:var(--hl-purple); background:linear-gradient(135deg,#f3e5f5,#ede7f6);"><strong>3. Pay for Performance</strong> — Rewards measurable outcomes aligned with individual, team, and company performance.</div>
+      <div class="info-box warn"><strong>4. Simplicity & Transparency</strong> — Employees understand how pay is determined and can influence it through their performance.</div>
+      <div class="info-box"><strong>5. Benefits as Strategic Lever</strong> — Supporting holistic well-being (physical, mental, financial) for sustained high performance.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 PS FRAMEWORK -->
+<div class="section" id="rew-3ps">
+  <h1>📐 The 3 Ps Framework</h1>
+  <p class="subtitle">Pay Position, Pay Structure, Pay Administration</p>
+
+  <div class="card">
+    <h2>Pay Position — Where We Target</h2>
+    <table class="tbl">
+      <tr><th>Category</th><th>Target</th></tr>
+      <tr><td>Most roles</td><td>Total cash at market median (P50)</td></tr>
+      <tr><td>Critical / scarce-skill roles</td><td>P60+ (Engineering, AI/ML, Leadership)</td></tr>
+      <tr><td>Benefits</td><td>Aligned to local compliance norms and market prevalence</td></tr>
+      <tr><td>Equity</td><td>Market-competitive, benchmarked grid contextualized by geography</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Pay Structure — How It's Built</h2>
+    <div style="text-align:center; padding:1rem; background:var(--hl-light); border-radius:var(--radius-sm); font-weight:700; font-size:1.1rem; margin-bottom:1rem;">
+      Total Comp = Base Salary + Variable + Equity
+    </div>
+    <h3>Pay Range Spreads (by level)</h3>
+    <table class="tbl">
+      <tr><th>Level Band</th><th>Levels</th><th>Range Spread</th><th>Level-on-Level Progression</th></tr>
+      <tr><td>Entry / Junior</td><td>S3, S4, P1, P2, P3, M2</td><td>30-45%</td><td>20-30%</td></tr>
+      <tr><td>Middle</td><td>P4, P5, M3, M4</td><td>45-55%</td><td>30-40%</td></tr>
+      <tr><td>Senior</td><td>P6, M5, M6, E1</td><td>55-65%</td><td>35-55%</td></tr>
+    </table>
+    <div class="info-box">Three control points per range: <strong>Min, Mid, Max</strong>. Mid = target positioning. Ranges are smoothed exponentially to allow room for hiring, growth, and differentiation.</div>
+  </div>
+
+  <div class="card">
+    <h2>Pay Administration — How Decisions Are Made</h2>
+    <ul>
+      <li><strong>Differentiation:</strong> Outstanding performance rewarded through higher merit increases and/or equity refreshers</li>
+      <li><strong>Progression:</strong> Based on role scope, impact, and readiness — not tenure</li>
+      <li><strong>Calibration:</strong> Annual performance calibration ensures fairness, transparency, and consistency</li>
+    </ul>
+  </div>
+</div>
+
+<!-- BASE SALARY -->
+<div class="section" id="rew-base">
+  <h1>💵 Base Salary</h1>
+  <p class="subtitle">The core fixed component of total compensation</p>
+  <div class="card">
+    <h2>Structure</h2>
+    <div style="text-align:center; padding:1rem; background:var(--hl-light); border-radius:var(--radius-sm); font-weight:700; margin-bottom:1rem;">Base Salary = Basic Salary + Allowances</div>
+    <p><strong>Basic Salary:</strong> Basis for retirement contributions, statutory benefits, and pay-linked elements.</p>
+    <p><strong>Allowances:</strong> Added where market practice, statutory requirements, or remote-work realities warrant — examples include telephone, broadband, fuel, books and periodicals.</p>
+    <div class="info-box">The ratio between basic salary and allowances varies by country.</div>
+    <h3>Guiding Philosophy</h3>
+    <ul>
+      <li><strong>Simplicity:</strong> Clean, understandable pay structure</li>
+      <li><strong>Compliance:</strong> Meets all local statutory requirements</li>
+      <li><strong>Market Alignment:</strong> Benchmarked against credible market data</li>
+    </ul>
+  </div>
+</div>
+
+<!-- VARIABLE PAY -->
+<div class="section" id="rew-variable">
+  <h1>📈 Variable Pay</h1>
+  <p class="subtitle">Performance-linked rewards for individual, team, and company outcomes</p>
+  <div class="card">
+    <h2>Design Principles</h2>
+    <ul>
+      <li><strong>Performance Differentiation:</strong> Rewards measurable outcomes</li>
+      <li><strong>Business Outcomes Alignment:</strong> Tied to company-level success</li>
+      <li><strong>Transparency & Predictability:</strong> Clear targets and thresholds</li>
+      <li><strong>Market Competitiveness:</strong> Benchmarked against industry norms</li>
+    </ul>
+    <h3>Leadership Company Bonus Targets</h3>
+    <table class="tbl">
+      <tr><th>Level</th><th>Target Bonus</th></tr>
+      <tr><td>Directors</td><td>15%</td></tr>
+      <tr><td>Senior Directors</td><td>20%</td></tr>
+      <tr><td>VPs</td><td>25-30%</td></tr>
+    </table>
+    <div class="info-box blue">GTM teams participate in variable pay/SPIFFs structures aligned to sales and revenue outcomes.</div>
+  </div>
+</div>
+
+<!-- EQUITY -->
+<div class="section" id="rew-equity">
+  <h1>📊 Equity</h1>
+  <p class="subtitle">Long-term ownership aligned to company growth</p>
+  <div class="card">
+    <h2>Eligibility & Vesting</h2>
+    <p>Equity is available across HighLevel, excluding early-career customer-facing roles (where compensation is intentionally weighted toward cash/variable pay due to higher mobility and shorter tenure).</p>
+    <table class="tbl">
+      <tr><th>Grant Type</th><th>Vesting Schedule</th></tr>
+      <tr><td>Initial Grants (at hire)</td><td>4-year vesting, 1-year cliff, monthly thereafter</td></tr>
+      <tr><td>Periodic Refreshes (performance/promotion)</td><td>4-year vesting, no cliff, monthly from start</td></tr>
+    </table>
+    <div class="info-box">Equity grants are geo-differentiated and aligned to local market data.</div>
+  </div>
+</div>
+
+<!-- BENEFITS -->
+<div class="section" id="rew-benefits">
+  <h1>🏥 Benefits & Wellbeing</h1>
+  <p class="subtitle">Holistic support beyond pay</p>
+  <div class="card">
+    <h2>Philosophy</h2>
+    <p>HighLevel recognizes that physical, mental, and financial wellbeing is essential for sustainable performance. Benefits are designed to support the whole person.</p>
+    <h3>Three Pillars</h3>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:1rem 0;">
+      <div style="background:var(--hl-light); padding:1rem; border-radius:var(--radius-sm); text-align:center;">
+        <div style="font-size:1.5rem; margin-bottom:6px;">🏥</div>
+        <strong>Global Standards</strong><br><span style="font-size:0.82rem; color:var(--hl-muted);">Healthcare, insurance, retirement benchmarked against local best practices</span>
+      </div>
+      <div style="background:#e3f2fd; padding:1rem; border-radius:var(--radius-sm); text-align:center;">
+        <div style="font-size:1.5rem; margin-bottom:6px;">🏠</div>
+        <strong>Flexibility</strong><br><span style="font-size:0.82rem; color:var(--hl-muted);">Remote-first, autonomy, work-life balance, meaningful time off</span>
+      </div>
+      <div style="background:#f3e5f5; padding:1rem; border-radius:var(--radius-sm); text-align:center;">
+        <div style="font-size:1.5rem; margin-bottom:6px;">🧠</div>
+        <strong>Support Systems</strong><br><span style="font-size:0.82rem; color:var(--hl-muted);">EAP, financial wellness, confidential practical support</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GOVERNANCE -->
+<div class="section" id="rew-governance">
+  <h1>🔒 Governance & Transparency</h1>
+  <p class="subtitle">How compensation decisions are overseen and validated</p>
+  <div class="card">
+    <ul>
+      <li><strong>Executive Oversight:</strong> Compensation Committee ensures fairness, consistency, and public-company governance standards</li>
+      <li><strong>Equity Management:</strong> Disciplined governance over pool sizing, dilution, and refresh cadence for long-term value creation</li>
+      <li><strong>Pay Equity:</strong> Independent annual reviews to identify and address gaps across roles, levels, and geographies</li>
+    </ul>
+  </div>
+</div>
+
+<!-- BENCHMARKING -->
+<div class="section" id="rew-benchmarking">
+  <h1>📊 Market Benchmarking</h1>
+  <p class="subtitle">How HighLevel stays competitive with credible data</p>
+  <div class="card">
+    <h2>Data Source & Refresh Cadence</h2>
+    <p><strong>Primary data source:</strong> Aon Radford</p>
+    <table class="tbl">
+      <tr><th>Refresh</th><th>Timing</th><th>Purpose</th></tr>
+      <tr><td>First Mass Refresh</td><td>April</td><td>Aligns with annual performance cycle; high participation</td></tr>
+      <tr><td>Second Mass Refresh</td><td>October</td><td>Aligns with mid-year cycle; high participation</td></tr>
+      <tr><td>Volume-based roles</td><td>Semi-annual</td><td>Use both refresh cycles</td></tr>
+      <tr><td>New roles</td><td>As needed</td><td>Pull data at time of role design</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== COACHING MODULE ==================== -->
+
+<!-- COACH HOME - CHAT -->
+<div class="section" id="coach-home">
+  <h1>🤖 Performance Coach</h1>
+  <p class="subtitle">Click any prompt below to get guidance — or explore scenarios and coaching cards</p>
+
+  <div class="persona-bar">
+    <button class="persona-btn active" onclick="switchCoachPersona(this,'all')"><span class="p-icon">🌐</span> All Personas</button>
+    <button class="persona-btn" onclick="switchCoachPersona(this,'employee')"><span class="p-icon">👤</span> Employee</button>
+    <button class="persona-btn" onclick="switchCoachPersona(this,'manager')"><span class="p-icon">👥</span> Manager</button>
+    <button class="persona-btn" onclick="switchCoachPersona(this,'leader')"><span class="p-icon">🏛️</span> Leader</button>
+  </div>
+
+  <div class="chat-container" id="coachChat">
+    <div class="chat-header">
+      <div class="dot"></div>
+      <span>HighLevel Performance Coach</span>
+    </div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="chat-msg bot"><div class="bubble">Welcome! I'm your Performance Coach. Click any prompt below to get started, or switch personas for role-specific guidance.</div></div>
+    </div>
+    <div class="chat-prompts" id="chatPrompts">
+      <button class="chat-prompt-btn" data-persona="employee" onclick="askCoach(this)">How do I write a strong self-review?</button>
+      <button class="chat-prompt-btn" data-persona="employee" onclick="askCoach(this)">I disagree with my rating</button>
+      <button class="chat-prompt-btn" data-persona="employee" onclick="askCoach(this)">How to ask for a promotion</button>
+      <button class="chat-prompt-btn" data-persona="manager" onclick="askCoach(this)">How to rate a borderline performer</button>
+      <button class="chat-prompt-btn" data-persona="manager" onclick="askCoach(this)">Delivering tough feedback</button>
+      <button class="chat-prompt-btn" data-persona="manager" onclick="askCoach(this)">Nominating for promotion</button>
+      <button class="chat-prompt-btn" data-persona="leader" onclick="askCoach(this)">Running calibration effectively</button>
+      <button class="chat-prompt-btn" data-persona="leader" onclick="askCoach(this)">Handling rating disagreements</button>
+      <button class="chat-prompt-btn" data-persona="employee" onclick="askCoach(this)">Understanding the rating scale</button>
+      <button class="chat-prompt-btn" data-persona="manager" onclick="askCoach(this)">Writing peer nomination requests</button>
+    </div>
+  </div>
+</div>
+
+<!-- COACH FAQ -->
+<div class="section" id="coach-faq">
+  <h1>❓ FAQ by Scenario</h1>
+  <p class="subtitle">Click any question to expand the guidance</p>
+
+  <div class="persona-bar">
+    <button class="persona-btn active" onclick="filterFaq(this,'all')"><span class="p-icon">🌐</span> All</button>
+    <button class="persona-btn" onclick="filterFaq(this,'employee')"><span class="p-icon">👤</span> Employee</button>
+    <button class="persona-btn" onclick="filterFaq(this,'manager')"><span class="p-icon">👥</span> Manager</button>
+    <button class="persona-btn" onclick="filterFaq(this,'leader')"><span class="p-icon">🏛️</span> Leader</button>
+  </div>
+
+  <div id="faqList">
+    <div class="faq-item" data-persona="employee">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>👤</span> How do I write a compelling self-review? <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>Use the <strong>Outcomes + Behaviours = Impact</strong> formula for every point. Start by listing 3-5 key contributions with specific metrics. For example, instead of "I improved the product," write "Led the checkout redesign that increased conversion by 18%, collaborating with 3 cross-functional teams."</p>
+        <p><strong>Tips:</strong> Reflect before writing. Gather data throughout the year. Include both metric-driven wins and effort-based contributions (mentorship, knowledge transfer). Be honest about areas for growth — it shows self-awareness.</p>
+      </div>
+    </div>
+    <div class="faq-item" data-persona="employee">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>👤</span> I disagree with my performance rating. What should I do? <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>First, approach the conversation with openness. Ask your manager to walk you through the specific evidence that informed the rating. Share your perspective with concrete examples. If you still feel the rating doesn't reflect your contributions, you can ask your manager to discuss it with their PBP. Remember that ratings go through 3 levels of calibration, so they reflect input from multiple leaders.</p>
+        <p><strong>Key mindset shift:</strong> Treat feedback as data, not judgment. Focus the conversation on what you can do differently going forward, and ask for specific development support.</p>
+      </div>
+    </div>
+    <div class="faq-item" data-persona="employee">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>👤</span> How should I prepare for my review conversation? <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>Come prepared with your self-review points fresh in mind. Think about questions you want to ask: What went well? Where can I grow? What does success look like next year? Be ready to listen openly, take notes, and treat the conversation as two-way. Follow up by documenting your key takeaways and development commitments.</p>
+      </div>
+    </div>
+    <div class="faq-item" data-persona="manager">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>👥</span> How do I rate a borderline performer? <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>Evaluate the full review period — not just recent performance. Use the <strong>What + How + Impact</strong> lens. Ask: "Were outcomes consistently delivered? Were behaviors aligned to expectations most of the time?" If they met expectations in some areas but fell short in others, "Sometimes Meets" may be appropriate. Document specific examples for both strengths and gaps to support your rating in calibration.</p>
+        <p><strong>Common pitfall:</strong> Avoid defaulting to "Meets" to avoid a difficult conversation. Clear differentiation helps the employee get the development support they need.</p>
+      </div>
+    </div>
+    <div class="faq-item" data-persona="manager">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>👥</span> How do I deliver tough feedback constructively? <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>Lead with specific observations, not generalizations. Use "I observed..." rather than "You always..." Frame development areas as growth opportunities. For example: "I noticed the Q3 project deliverables were delayed by 2 weeks. Let's discuss what support would help you manage timelines more effectively." Always pair development feedback with clear next steps and your commitment to support their growth.</p>
+      </div>
+    </div>
+    <div class="faq-item" data-persona="manager">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>👥</span> When should I nominate someone for promotion? <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>Nominate when the employee has been in role 12+ months, demonstrates sustained high performance, and is already operating at the next level in scope and complexity. The strongest cases show: measurable impact on business outcomes, initiative beyond current scope (coaching, team processes, hiring support), and peer/stakeholder feedback supporting the promotion. Remember to prepare a solid business case using the promotion nomination template.</p>
+      </div>
+    </div>
+    <div class="faq-item" data-persona="leader">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>🏛️</span> How do I run an effective calibration session? <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>Start by aligning on rating definitions — ensure everyone in the room has the same understanding of each level. Review proposed ratings against role expectations (not peer comparisons). Focus discussion on outliers and borderline cases. Ask managers to present evidence, not opinions. Watch for recency bias, central tendency, and halo effects. End by confirming all ratings have sufficient justification and document any adjustments made.</p>
+      </div>
+    </div>
+    <div class="faq-item" data-persona="leader">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>🏛️</span> What if my team's distribution doesn't match the guidelines? <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>The distribution guidelines (20/50/20/10) are directional benchmarks, not forced distributions. If your team genuinely has more high performers (or more development needs), be prepared to justify the distribution with specific evidence during calibration. The key is that every rating is substantiated and defensible. Come prepared with concrete examples for each employee, especially those in the "Exceeds" or "Does Not Meet" categories.</p>
+      </div>
+    </div>
+    <div class="faq-item" data-persona="leader">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>🏛️</span> How do I handle disagreements between managers during calibration? <span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>Redirect the conversation to evidence and role expectations. Ask: "What specific outcomes and behaviors are we evaluating?" Ensure both perspectives are heard, then align on what the rating definitions actually require. Use the PBP as a neutral facilitator. If consensus can't be reached, escalate to the next calibration level with both viewpoints documented.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COACH CARDS -->
+<div class="section" id="coach-cards">
+  <h1>🃏 Coaching Prompt Cards</h1>
+  <p class="subtitle">Situational prompts and conversation starters — click any card to expand</p>
+
+  <div class="persona-bar">
+    <button class="persona-btn active" onclick="filterCards(this,'all')"><span class="p-icon">🌐</span> All</button>
+    <button class="persona-btn" onclick="filterCards(this,'employee')"><span class="p-icon">👤</span> Employee</button>
+    <button class="persona-btn" onclick="filterCards(this,'manager')"><span class="p-icon">👥</span> Manager</button>
+    <button class="persona-btn" onclick="filterCards(this,'leader')"><span class="p-icon">🏛️</span> Leader</button>
+  </div>
+
+  <div class="coach-cards" id="coachCards">
+    <div class="coach-card" data-persona="employee" onclick="this.classList.toggle('expanded')">
+      <div class="cc-tag tag-situation">Situation</div>
+      <div class="cc-title">Your self-review feels overwhelming</div>
+      <div class="cc-body"><p>Start with just your top 3 wins. For each, write one sentence about what you did, one about how you did it, and one about the impact. Then expand from there. Use the Outcomes + Behaviours formula. Don't try to capture everything — focus on the most meaningful contributions.</p></div>
+    </div>
+    <div class="coach-card border-blue" data-persona="employee" onclick="this.classList.toggle('expanded')">
+      <div class="cc-tag tag-conversation">Conversation Starter</div>
+      <div class="cc-title">Asking your manager for growth support</div>
+      <div class="cc-body"><p>Try: "I'd like to develop my skills in [area]. Could we discuss what projects or mentorship opportunities might help me grow in that direction over the next cycle?"</p></div>
+    </div>
+    <div class="coach-card border-purple" data-persona="employee" onclick="this.classList.toggle('expanded')">
+      <div class="cc-tag tag-development">Development</div>
+      <div class="cc-title">You received unexpected critical feedback</div>
+      <div class="cc-body"><p>Take a breath. Ask clarifying questions: "Can you give me a specific example?" and "What would good look like going forward?" Write down the feedback and revisit it in 24 hours. Use it to build a concrete development plan. Remember: feedback is data for growth.</p></div>
+    </div>
+    <div class="coach-card" data-persona="manager" onclick="this.classList.toggle('expanded')">
+      <div class="cc-tag tag-situation">Situation</div>
+      <div class="cc-title">An employee is defensive about their rating</div>
+      <div class="cc-body"><p>Acknowledge their feelings first: "I understand this is not what you expected." Then walk through the specific evidence calmly. Ask: "What's your perspective on [specific example]?" Focus on the forward path: what needs to happen for a different outcome next cycle. Avoid debating — share evidence and listen.</p></div>
+    </div>
+    <div class="coach-card border-blue" data-persona="manager" onclick="this.classList.toggle('expanded')">
+      <div class="cc-tag tag-conversation">Conversation Starter</div>
+      <div class="cc-title">Opening the review conversation</div>
+      <div class="cc-body"><p>Try: "I appreciate the time you put into your self-review. I want this to be a two-way conversation — let me share my observations and then I'd love to hear your perspective. My goal is for us to align on your strengths, growth areas, and what success looks like going forward."</p></div>
+    </div>
+    <div class="coach-card border-purple" data-persona="manager" onclick="this.classList.toggle('expanded')">
+      <div class="cc-tag tag-development">Development</div>
+      <div class="cc-title">Supporting a high performer who wants promotion</div>
+      <div class="cc-body"><p>Be transparent about criteria: 12+ months in role, sustained performance, next-level evidence. Help them build their case by identifying stretch projects. If they're not ready yet, say: "Here's what I see as the gap, and here's how we can close it together over the next 6 months."</p></div>
+    </div>
+    <div class="coach-card" data-persona="leader" onclick="this.classList.toggle('expanded')">
+      <div class="cc-tag tag-situation">Situation</div>
+      <div class="cc-title">A manager is inflating ratings for their team</div>
+      <div class="cc-body"><p>Ask for specific evidence for each rating. Use the distribution guidelines as a conversation tool: "Your team has 80% in Exceeds — help me understand what's different about this team versus others." Compare evidence quality against the rating definitions. Partner with the PBP to coach the manager on differentiation.</p></div>
+    </div>
+    <div class="coach-card border-blue" data-persona="leader" onclick="this.classList.toggle('expanded')">
+      <div class="cc-tag tag-conversation">Conversation Starter</div>
+      <div class="cc-title">Opening calibration with your directors</div>
+      <div class="cc-body"><p>Try: "Let's start by aligning on what each rating level means for our teams. I want us to focus on evidence and role expectations — not comparisons between people. Where should we spend the most time today?"</p></div>
+    </div>
+    <div class="coach-card border-purple" data-persona="leader" onclick="this.classList.toggle('expanded')">
+      <div class="cc-tag tag-development">Development</div>
+      <div class="cc-title">Building a stronger feedback culture</div>
+      <div class="cc-body"><p>Model it yourself — give regular, specific feedback to your directs. Encourage managers to use continuous feedback in Darwinbox throughout the year, not just at review time. Recognize teams that demonstrate strong feedback practices. Make it safe to share development areas openly.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- COACH - EMPLOYEE SITUATIONS -->
+<div class="section" id="coach-emp">
+  <h1>👤 Employee Situations</h1>
+  <p class="subtitle">Navigating common performance review scenarios</p>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">I don't know what to write for areas of improvement <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>Think about: Where have you felt stretched? What skills do you wish you had more of? What feedback have you received throughout the year? Be specific — "I want to improve cross-functional stakeholder management" is better than "I want to communicate better." Then add what support would help: a mentor, a stretch project, a training program.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">I just joined recently — how do I write a meaningful self-review? <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>Focus on your onboarding contributions: How quickly did you ramp up? What early impact have you had? What have you learned? If eligible (hired by December cutoff), even a few months of contributions matter. Highlight early wins, learning velocity, and collaboration with your team.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">How should I think about career aspirations? <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>Be honest about what energizes you. Do you want to go deeper technically or move into leadership? Are there specific teams, projects, or skills you want to explore? This isn't a commitment — it's a signal to help the organization support your growth. The more specific you are, the more useful the conversation will be.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">I gave great peer feedback but got a lower rating than expected <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>Remember: peer feedback is one input among several. Your rating reflects the full picture — self-review, peer feedback, manager assessment, and calibration across the organization. Ask your manager to help you understand which specific areas were weighed in the final decision. Use this as input for your growth plan.</p></div>
+  </div>
+</div>
+
+<!-- COACH - MANAGER SITUATIONS -->
+<div class="section" id="coach-mgr">
+  <h1>👥 Manager Situations</h1>
+  <p class="subtitle">Handling tricky review scenarios with confidence</p>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">My employee did great work but their impact is hard to quantify <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>Not all impact is metric-driven. Highlight effort-based contributions: knowledge transfer, mentoring, team morale, unblocking others, process improvements. Use phrases like "enabled the team to..." or "their support on X freed up the team to deliver Y." Peer feedback often captures this well — leverage those inputs.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Two employees have similar output but different behaviors <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>This is exactly why Performance = Outcomes + Behaviours. If one employee delivers results but undermines collaboration, while the other delivers the same results and lifts the team up — that's a meaningful difference. Document the behavioral evidence and use it to differentiate ratings. The "How" matters as much as the "What."</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">My rating was changed during calibration and I need to explain it <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>Be transparent: "Your rating was reviewed as part of our calibration process, where we ensure consistency across teams and functions." Share the evidence that informed the final decision. Avoid blaming the process — own the conversation. Focus on the forward-looking development plan.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">An employee wants to know what peers said about them <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>Peer feedback is confidential — visible only to the manager and SLT. You can share themes and synthesized insights without attributing specific comments. For example: "Multiple stakeholders highlighted your strength in X" or "Feedback suggests an opportunity to develop Y." Never reveal who said what.</p></div>
+  </div>
+</div>
+
+<!-- COACH - LEADER SITUATIONS -->
+<div class="section" id="coach-ldr">
+  <h1>🏛️ Leader Situations</h1>
+  <p class="subtitle">Strategic performance management challenges</p>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Multiple managers are requesting promotion for the same level — how do I prioritize? <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>Return to the promotion criteria: time in role, performance consistency, next-level evidence, business alignment. Compare cases using the nomination template. Ask: "Who has the strongest evidence of already operating at the next level?" Consider organizational needs and role availability. Use calibration to surface the strongest cases and document why others may need more time.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">I'm seeing recency bias across my org during calibration <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>Name it openly in the calibration session. Ask managers to provide evidence from the full review period — not just the last quarter. Encourage the use of continuous feedback notes in Darwinbox year-round to combat this. You might ask: "What was this person's performance like in Q1 and Q2?" to broaden the lens.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">How do I ensure compensation decisions are fair across my function? <span class="arrow">▼</span></div>
+    <div class="faq-a"><p>Work with your PBP and the Rewards team during the compensation planning phase. Review compa-ratios across your team. Ensure merit increases and equity refreshers are aligned to performance ratings. Flag any outliers where compensation doesn't match performance outcomes. The goal is for an ideal compa-ratio landing above 0.7 of the new level for promotions.</p></div>
+  </div>
+</div>
+
+</div><!-- end main -->
+</div><!-- end layout -->
+
+<script>
+// ==================== NAVIGATION ====================
+const coachResponses = {
+  "How do I write a strong self-review?": "Great question! Here's your formula:\n\n**Step 1:** List your top 3-5 contributions with specific outcomes and data.\n\n**Step 2:** For each, apply the Impact formula: Outcomes (What you delivered) + Behaviours (How you delivered it).\n\n**Step 3:** Be specific — 'Increased trial-to-paid conversion by 18%' beats 'Improved conversions.'\n\n**Step 4:** Don't forget effort-based contributions like mentoring, knowledge sharing, and team support.\n\n**Step 5:** For areas of improvement, be honest and specific about what support you need.\n\n💡 **Pro tip:** Start collecting your wins throughout the year — don't wait until the form opens!",
+
+  "I disagree with my rating": "This is a natural feeling. Here's how to navigate it constructively:\n\n**1. Listen first.** Ask your manager to walk you through the evidence that informed the rating.\n\n**2. Share your perspective** with specific examples — not emotions. 'I delivered X, Y, Z' is stronger than 'I feel this is unfair.'\n\n**3. Understand the process.** Ratings go through 3 levels of calibration with multiple leaders. Your manager may not have had sole control.\n\n**4. Ask forward-looking questions:** 'What would it take to reach the next rating level?' and 'What specific support can I count on?'\n\n**5. If still unresolved,** you can ask to discuss with your PBP.\n\n💡 **Key mindset:** Treat feedback as input for growth, not a final judgment on your worth.",
+
+  "How to ask for a promotion": "Here's a strategic approach:\n\n**1. Know the criteria:**\n- 12+ months in role\n- Sustained high performance\n- Already operating at the next level\n- Business need exists\n\n**2. Build your case proactively.** Document examples where you've operated beyond your current scope — coaching others, leading cross-functional work, handling next-level complexity.\n\n**3. Have the conversation** with your manager before the review cycle: 'I'm interested in growing to the next level. What gaps do you see, and how can we close them?'\n\n**4. Use the nomination template** language: demonstrated readiness, measurable impact, initiative beyond scope.\n\n💡 **Remember:** Promotion is about demonstrated impact and future potential — not tenure alone.",
+
+  "How to rate a borderline performer": "Borderline cases are the hardest. Here's a framework:\n\n**1. Evaluate the full period** — not just recent months.\n\n**2. Apply the dual lens:**\n- Outcomes (What): Were deliverables met consistently?\n- Behaviours (How): Were they aligned to expectations?\n\n**3. Ask yourself:**\n- 'Would I be comfortable defending this rating in calibration?'\n- 'Does this rating serve the employee's development?'\n\n**4. If outcomes were met but behaviors were inconsistent** (or vice versa), 'Sometimes Meets' is often appropriate.\n\n**5. Document specific evidence** for both strengths and gaps.\n\n⚠️ **Avoid** defaulting to 'Meets' to avoid a tough conversation. Clear differentiation helps the employee get the support they need.",
+
+  "Delivering tough feedback": "Here's a structure for difficult conversations:\n\n**1. Set the tone:** 'I want this to be a constructive conversation about your growth.'\n\n**2. Lead with specifics**, not generalizations:\n- ✅ 'The Q3 project was delivered 2 weeks late, which impacted the team's sprint planning'\n- ❌ 'You always miss deadlines'\n\n**3. Pair every development area with a path forward:** 'Here's what I'd like to see, and here's how I can support you.'\n\n**4. Make it two-way:** 'What's your perspective on this? What support would help?'\n\n**5. End with clarity:** Summarize key takeaways and next steps.\n\n💡 **Remember:** The goal is growth, not punishment. Your investment in feedback shows you care about their development.",
+
+  "Nominating for promotion": "Build a strong nomination using this checklist:\n\n**✅ Time in Role:** 12+ months since hire or last promotion\n\n**✅ Sustained Performance:** Consistent high performance (not just one good quarter)\n\n**✅ Next-Level Evidence:**\n- Operating at next-level scope and complexity\n- Measurable business impact (KPIs, project outcomes)\n- Initiative beyond current scope (coaching, process improvement, hiring support)\n\n**✅ Stakeholder Support:** Peer and cross-functional feedback backing the case\n\n**✅ Business Alignment:** Role availability and organizational need at the next level\n\n**❌ Exclusion:** Employee must not be on PIP\n\n💡 Use the promotion nomination template to structure your case.",
+
+  "Running calibration effectively": "Here's your calibration playbook:\n\n**Before the Session:**\n- Review all proposed ratings and evidence\n- Identify potential outliers and borderline cases\n- Align with PBP on focus areas\n\n**Opening:**\n'Let's align on rating definitions first. We're evaluating against role expectations, not comparing people to each other.'\n\n**During:**\n- Focus on evidence, not opinions\n- Watch for: recency bias, central tendency, halo/horn effects\n- Ask managers to justify with specifics\n- Use distribution guidelines as conversation tools, not mandates\n\n**Closing:**\n- Confirm all ratings have sufficient justification\n- Document any adjustments and rationale\n- Align on promotion nominations\n\n💡 Partner closely with your PBP — they're your calibration co-pilot.",
+
+  "Handling rating disagreements": "When managers disagree during calibration:\n\n**1. Redirect to evidence:** 'Let's focus on what specific outcomes and behaviors we're evaluating.'\n\n**2. Ensure both perspectives are heard.** Let each manager present their evidence.\n\n**3. Anchor to definitions:** Re-read the rating description together. Ask: 'Which level does the evidence best support?'\n\n**4. Use the PBP** as a neutral facilitator.\n\n**5. If consensus can't be reached,** document both viewpoints and escalate to the next calibration level.\n\n💡 **Key principle:** Calibration is about shared standards, not winning arguments.",
+
+  "Understanding the rating scale": "Here's how the 4-point scale works at HighLevel:\n\n⭐ **Exceeds High Expectations (~20%)**\nRegularly goes beyond expectations. Delivers high-quality work and strong impact. Drives innovation, mentors others, takes ownership proactively.\n\n✅ **Meets High Expectations (~50%)**\nConsistently fulfills role responsibilities. Delivers expected results. Handles work independently with solid competency.\n\n⚠️ **Sometimes Meets High Expectations (~20%)**\nInconsistently meets expectations. Strong in some areas, falls short in others. Shows potential but needs additional support.\n\n🔴 **Does Not Meet High Expectations (~10%)**\nPerformance below expectations despite feedback. Limited accountability and response to coaching. May require a PIP.\n\n💡 The percentages are directional benchmarks for calibration, not forced distributions.",
+
+  "Writing peer nomination requests": "When nominating peers for an employee's review:\n\n**Guidelines by level:**\n- S3-P2 (Junior): Optional but good to have\n- P3/M2-P4/M3 (Mid): Minimum 2 reviewers strongly encouraged\n- P5/M4+ (Senior): Minimum 3 detailed reviewer inputs\n\n**Who to nominate:**\n- Stakeholders who directly benefited from the employee's work\n- Peers familiar with their key projects\n- Cross-level and cross-function contacts with visibility into contributions\n\n💡 Choose reviewers who can provide specific, evidence-based feedback on both strengths and development areas."
+};
+
+function switchModule(mod) {
+  document.querySelectorAll('.module-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+
+  document.getElementById('nav-performance').style.display = mod==='performance'?'block':'none';
+  document.getElementById('nav-rewards').style.display = mod==='rewards'?'block':'none';
+  document.getElementById('nav-coach').style.display = mod==='coach'?'block':'none';
+
+  const firstPages = {performance:'perf-home', rewards:'rew-home', coach:'coach-home'};
+  const navId = 'nav-'+mod;
+  const firstLink = document.querySelector('#'+navId+' a');
+  showPage(firstPages[mod], firstLink);
+}
+
+function showPage(id, link) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(link) {
+    const nav = link.closest('[id^=nav-]');
+    if(nav) nav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+    link.classList.add('active');
+  }
+}
+
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+function switchInner(btn, id) {
+  const container = btn.closest('.card');
+  container.querySelectorAll('.inner-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  container.querySelectorAll('.inner-content').forEach(c => c.style.display='none');
+  container.querySelector('#'+id).style.display='block';
+}
+
+// Coach chat
+function askCoach(btn) {
+  const q = btn.textContent;
+  const msgs = document.getElementById('chatMsgs');
+
+  const userMsg = document.createElement('div');
+  userMsg.className = 'chat-msg user';
+  userMsg.innerHTML = '<div class="bubble">'+q+'</div>';
+  msgs.appendChild(userMsg);
+
+  setTimeout(() => {
+    const botMsg = document.createElement('div');
+    botMsg.className = 'chat-msg bot';
+    const response = coachResponses[q] || "That's a great question! Please check the FAQ section for detailed guidance on this topic.";
+    botMsg.innerHTML = '<div class="bubble">'+response.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'</div>';
+    msgs.appendChild(botMsg);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 400);
+
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function switchCoachPersona(btn, persona) {
+  btn.closest('.persona-bar').querySelectorAll('.persona-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#chatPrompts .chat-prompt-btn').forEach(p => {
+    p.style.display = (persona==='all' || p.dataset.persona===persona) ? 'inline-block' : 'none';
+  });
+}
+
+function filterFaq(btn, persona) {
+  btn.closest('.persona-bar').querySelectorAll('.persona-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#faqList .faq-item').forEach(item => {
+    item.style.display = (persona==='all' || item.dataset.persona===persona) ? 'block' : 'none';
+  });
+}
+
+function filterCards(btn, persona) {
+  btn.closest('.persona-bar').querySelectorAll('.persona-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#coachCards .coach-card').forEach(card => {
+    card.style.display = (persona==='all' || card.dataset.persona===persona) ? 'block' : 'none';
+  });
+}
+</script>
+
+</body>
+</html>
